@@ -1,8 +1,6 @@
-Countries for Elgg
-==================
-![Elgg 1.11](https://img.shields.io/badge/Elgg-1.11.x-orange.svg?style=flat-square)
-![Elgg 1.12](https://img.shields.io/badge/Elgg-1.12.x-orange.svg?style=flat-square)
-![Elgg 2.0](https://img.shields.io/badge/Elgg-2.0.x-orange.svg?style=flat-square)
+hypeCountries
+=============
+![Elgg 3.0](https://img.shields.io/badge/Elgg-3.0-orange.svg?style=flat-square)
 
 Country utilities
 
@@ -27,9 +25,10 @@ echo elgg_view('input/country', array(
 ### List countries
 
 ```php
-$countries = elgg_get_countries();
-foreach ($countries as $iso => $name) {
-	echo "$name ($iso)";
+$countries = elgg()->countries->getCountries();
+foreach ($countries as $country) {
+	/* @var $country \hypeJunction\Country */
+	echo "$country->name ($country->iso)";
 }
 ```
 

@@ -5,9 +5,10 @@ if (!$value) {
 	return;
 }
 
-$countries = elgg_get_countries();
+$countries = elgg()->countries->getCountries();
+
 if (array_key_exists($value, $countries)) {
-	echo $countries[$value];
+	echo $countries[$value]->name;
 } else {
 	echo $value;
 }

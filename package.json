@@ -1,12 +1,12 @@
 {
-  "name": "countries",
+  "name": "hypecountries",
   "version": "1.1.0",
   "license": "GPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:hypeJunction/Elgg-countries.git",
+    "url": "git@github.com:hypeJunction/Elgg3-hypeCountries.git",
     "owner": "hypeJunction",
-    "repo": "Elgg-countries"
+    "repo": "Elgg3-hypeCountries"
   },
   "devDependencies": {
     "curlrequest": "^0.3.10",

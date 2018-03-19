@@ -15,27 +15,28 @@ class Countries {
 	 *
 	 * To get a list of countries for a select dropdown, you could use
 	 * <code>
-	 * 		Countries::getCountries('iso', 'name', 'name');
+	 *        Countries::getCountries('iso', 'name', 'name');
 	 * </code>
 	 *
 	 * This will sort the array by country name, and output iso code => country name value pairs
 	 *
-	 * @param string $map_key		 Property value of the array keys
-	 * @param type   $map_value_keys Array values
-	 * @param type   $sort_key		 Sort key
-	 * @return array
+	 * @param string $map_key        Property value of the array keys
+	 * @param mixed  $map_value_keys Array values
+	 * @param string $sort_key       Sort key
+	 *
+	 * @return Country[]
 	 */
 	public static function getCountries($map_key = '', $map_value_keys = null, $sort_key = null) {
 
 		$countries = self::getSortedCountryList($sort_key);
 
-		$mappedCountries = array();
+		$mappedCountries = [];
 
 		foreach ($countries as $key => $country) {
 			$key = self::isValidProperty($map_key) ? $country[$map_key] : $key;
 
 			if (is_array($map_value_keys) && sizeof($map_value_keys)) {
-				$value = array();
+				$value = [];
 				foreach ($map_value_keys as $map_value_key) {
 					if (self::isValidProperty($map_value_key)) {
 						$value[$map_value_key] = $country[$map_value_key];
@@ -50,20 +51,28 @@ class Countries {
 			$mappedCountries[$key] = $value;
 		}
 
-		return $mappedCountries;
+		return array_map(function ($e) {
+			return new Country($e);
+		}, $mappedCountries);
 	}
 
 	/**
 	 * Interpret the coutry iso code to contry name
+	 *
 	 * @param string $iso ISO code
-	 * @return string	Country name
+	 *
+	 * @return Country
 	 */
 	public static function getCountryByCode($iso = null) {
 		$countries = self::getRawCountryList();
+
 		if ($iso) {
-			return $countries[$iso];
+			return new Country($countries[$iso]);
 		}
-		return $countries;
+
+		return array_map(function ($e) {
+			return new Country($e);
+		}, $countries);
 	}
 
 	/**
@@ -72,7 +81,7 @@ class Countries {
 	 */
 	protected static function countryListProperties() {
 
-		return array(
+		return [
 			'name',
 			'iso',
 			'iso3',
@@ -91,12 +100,14 @@ class Countries {
 			'languages',
 			'geoname_id',
 			'neighbours'
-		);
+		];
 	}
 
 	/**
 	 * Check if property is valid
+	 *
 	 * @param string $property
+	 *
 	 * @return boolean
 	 */
 	protected static function isValidProperty($property) {
@@ -105,7 +116,9 @@ class Countries {
 
 	/**
 	 * Sort the country list by key
+	 *
 	 * @param string $sort_key
+	 *
 	 * @return array
 	 */
 	protected static function getSortedCountryList($sort_key = null) {
@@ -114,14 +127,18 @@ class Countries {
 		}
 
 		$countryList = self::getRawCountryList();
+
 		usort($countryList, self::buildSorter($sort_key));
+
 		return $countryList;
 	}
 
 	/**
 	 * Sorting algorithm
+	 *
 	 * @param string $sort_key
-	 * @return bolean
+	 *
+	 * @return \Closure
 	 */
 	protected static function buildSorter($sort_key) {
 		return function ($a, $b) use ($sort_key) {
@@ -142,11 +159,11 @@ class Countries {
 
 		/**
 		 * @copyright http://download.geonames.org/export/dump/countryInfo.txt
-		 * @link http://github.com/debuggable/php_arrays/tree
-		 * @author Felix Geisendörfer (felix@debuggable.com)
+		 * @link      http://github.com/debuggable/php_arrays/tree
+		 * @author    Felix Geisendörfer (felix@debuggable.com)
 		 * */
-		return array(
-			'AD' => array(
+		return [
+			'AD' => [
 				'name' => elgg_echo('country:AD'),
 				'iso' => 'AD',
 				'iso3' => 'AND',
@@ -165,8 +182,8 @@ class Countries {
 				'languages' => 'ca,fr-AD,pt',
 				'geoname_id' => '3041565',
 				'neighbours' => 'ES,FR',
-			),
-			'AE' => array(
+			],
+			'AE' => [
 				'name' => elgg_echo('country:AE'),
 				'iso' => 'AE',
 				'iso3' => 'ARE',
@@ -185,8 +202,8 @@ class Countries {
 				'languages' => 'ar-AE,fa,en,hi,ur',
 				'geoname_id' => '290557',
 				'neighbours' => 'SA,OM',
-			),
-			'AF' => array(
+			],
+			'AF' => [
 				'name' => elgg_echo('country:AF'),
 				'iso' => 'AF',
 				'iso3' => 'AFG',
@@ -205,8 +222,8 @@ class Countries {
 				'languages' => 'fa-AF,ps,uz-AF,tk',
 				'geoname_id' => '1149361',
 				'neighbours' => 'TM,CN,IR,TJ,PK,UZ',
-			),
-			'AG' => array(
+			],
+			'AG' => [
 				'name' => elgg_echo('country:AG'),
 				'iso' => 'AG',
 				'iso3' => 'ATG',
@@ -225,8 +242,8 @@ class Countries {
 				'languages' => 'en-AG',
 				'geoname_id' => '3576396',
 				'neighbours' => '',
-			),
-			'AI' => array(
+			],
+			'AI' => [
 				'name' => elgg_echo('country:AI'),
 				'iso' => 'AI',
 				'iso3' => 'AIA',
@@ -245,8 +262,8 @@ class Countries {
 				'languages' => 'en-AI',
 				'geoname_id' => '3573511',
 				'neighbours' => '',
-			),
-			'AL' => array(
+			],
+			'AL' => [
 				'name' => elgg_echo('country:AL'),
 				'iso' => 'AL',
 				'iso3' => 'ALB',
@@ -265,8 +282,8 @@ class Countries {
 				'languages' => 'sq,el',
 				'geoname_id' => '783754',
 				'neighbours' => 'MK,GR,CS,ME,RS',
-			),
-			'AM' => array(
+			],
+			'AM' => [
 				'name' => elgg_echo('country:AM'),
 				'iso' => 'AM',
 				'iso3' => 'ARM',
@@ -285,8 +302,8 @@ class Countries {
 				'languages' => 'hy',
 				'geoname_id' => '174982',
 				'neighbours' => 'GE,IR,AZ,TR',
-			),
-			'AO' => array(
+			],
+			'AO' => [
 				'name' => elgg_echo('country:AO'),
 				'iso' => 'AO',
 				'iso3' => 'AGO',
@@ -305,8 +322,8 @@ class Countries {
 				'languages' => 'pt-AO',
 				'geoname_id' => '3351879',
 				'neighbours' => 'CD,NA,ZM,CG',
-			),
-			'AR' => array(
+			],
+			'AR' => [
 				'name' => elgg_echo('country:AR'),
 				'iso' => 'AR',
 				'iso3' => 'ARG',
@@ -325,8 +342,8 @@ class Countries {
 				'languages' => 'es-AR,en,it,de,fr',
 				'geoname_id' => '3865483',
 				'neighbours' => 'CL,BO,UY,PY,BR',
-			),
-			'AS' => array(
+			],
+			'AS' => [
 				'name' => elgg_echo('country:AS'),
 				'iso' => 'AS',
 				'iso3' => 'ASM',
@@ -345,8 +362,8 @@ class Countries {
 				'languages' => 'en-AS,sm,to',
 				'geoname_id' => '5880801',
 				'neighbours' => '',
-			),
-			'AT' => array(
+			],
+			'AT' => [
 				'name' => elgg_echo('country:AT'),
 				'iso' => 'AT',
 				'iso3' => 'AUT',
@@ -365,8 +382,8 @@ class Countries {
 				'languages' => 'de-AT,hr,hu,sl',
 				'geoname_id' => '2782113',
 				'neighbours' => 'CH,DE,HU,SK,CZ,IT,SI,LI',
-			),
-			'AU' => array(
+			],
+			'AU' => [
 				'name' => elgg_echo('country:AU'),
 				'iso' => 'AU',
 				'iso3' => 'AUS',
@@ -385,8 +402,8 @@ class Countries {
 				'languages' => 'en-AU',
 				'geoname_id' => '2077456',
 				'neighbours' => '',
-			),
-			'AW' => array(
+			],
+			'AW' => [
 				'name' => elgg_echo('country:AW'),
 				'iso' => 'AW',
 				'iso3' => 'ABW',
@@ -405,8 +422,8 @@ class Countries {
 				'languages' => 'nl-AW,es,en',
 				'geoname_id' => '3577279',
 				'neighbours' => '',
-			),
-			'AX' => array(
+			],
+			'AX' => [
 				'name' => elgg_echo('country:AX'),
 				'iso' => 'AX',
 				'iso3' => 'ALA',
@@ -425,8 +442,8 @@ class Countries {
 				'languages' => 'sv-AX',
 				'geoname_id' => '661882',
 				'neighbours' => '',
-			),
-			'AZ' => array(
+			],
+			'AZ' => [
 				'name' => elgg_echo('country:AZ'),
 				'iso' => 'AZ',
 				'iso3' => 'AZE',
@@ -445,8 +462,8 @@ class Countries {
 				'languages' => 'az,ru,hy',
 				'geoname_id' => '587116',
 				'neighbours' => 'GE,IR,AM,TR,RU',
-			),
-			'BA' => array(
+			],
+			'BA' => [
 				'name' => elgg_echo('country:BA'),
 				'iso' => 'BA',
 				'iso3' => 'BIH',
@@ -465,8 +482,8 @@ class Countries {
 				'languages' => 'bs,hr-BA,sr-BA',
 				'geoname_id' => '3277605',
 				'neighbours' => 'CS,HR,ME,RS',
-			),
-			'BB' => array(
+			],
+			'BB' => [
 				'name' => elgg_echo('country:BB'),
 				'iso' => 'BB',
 				'iso3' => 'BRB',
@@ -485,8 +502,8 @@ class Countries {
 				'languages' => 'en-BB',
 				'geoname_id' => '3374084',
 				'neighbours' => '',
-			),
-			'BD' => array(
+			],
+			'BD' => [
 				'name' => elgg_echo('country:BD'),
 				'iso' => 'BD',
 				'iso3' => 'BGD',
@@ -505,8 +522,8 @@ class Countries {
 				'languages' => 'bn-BD,en',
 				'geoname_id' => '1210997',
 				'neighbours' => 'MM,IN',
-			),
-			'BE' => array(
+			],
+			'BE' => [
 				'name' => elgg_echo('country:BE'),
 				'iso' => 'BE',
 				'iso3' => 'BEL',
@@ -525,8 +542,8 @@ class Countries {
 				'languages' => 'nl-BE,fr-BE,de-BE',
 				'geoname_id' => '2802361',
 				'neighbours' => 'DE,NL,LU,FR',
-			),
-			'BF' => array(
+			],
+			'BF' => [
 				'name' => elgg_echo('country:BF'),
 				'iso' => 'BF',
 				'iso3' => 'BFA',
@@ -545,8 +562,8 @@ class Countries {
 				'languages' => 'fr-BF',
 				'geoname_id' => '2361809',
 				'neighbours' => 'NE,BJ,GH,CI,TG,ML',
-			),
-			'BG' => array(
+			],
+			'BG' => [
 				'name' => elgg_echo('country:BG'),
 				'iso' => 'BG',
 				'iso3' => 'BGR',
@@ -565,8 +582,8 @@ class Countries {
 				'languages' => 'bg,tr-BG',
 				'geoname_id' => '732800',
 				'neighbours' => 'MK,GR,RO,CS,TR,RS',
-			),
-			'BH' => array(
+			],
+			'BH' => [
 				'name' => elgg_echo('country:BH'),
 				'iso' => 'BH',
 				'iso3' => 'BHR',
@@ -585,8 +602,8 @@ class Countries {
 				'languages' => 'ar-BH,en,fa,ur',
 				'geoname_id' => '290291',
 				'neighbours' => '',
-			),
-			'BI' => array(
+			],
+			'BI' => [
 				'name' => elgg_echo('country:BI'),
 				'iso' => 'BI',
 				'iso3' => 'BDI',
@@ -605,8 +622,8 @@ class Countries {
 				'languages' => 'fr-BI,rn',
 				'geoname_id' => '433561',
 				'neighbours' => 'TZ,CD,RW',
-			),
-			'BJ' => array(
+			],
+			'BJ' => [
 				'name' => elgg_echo('country:BJ'),
 				'iso' => 'BJ',
 				'iso3' => 'BEN',
@@ -625,8 +642,8 @@ class Countries {
 				'languages' => 'fr-BJ',
 				'geoname_id' => '2395170',
 				'neighbours' => 'NE,TG,BF,NG',
-			),
-			'BL' => array(
+			],
+			'BL' => [
 				'name' => elgg_echo('country:BL'),
 				'iso' => 'BL',
 				'iso3' => 'BLM',
@@ -645,8 +662,8 @@ class Countries {
 				'languages' => 'fr',
 				'geoname_id' => '3578476',
 				'neighbours' => '',
-			),
-			'BM' => array(
+			],
+			'BM' => [
 				'name' => elgg_echo('country:BM'),
 				'iso' => 'BM',
 				'iso3' => 'BMU',
@@ -665,8 +682,8 @@ class Countries {
 				'languages' => 'en-BM,pt',
 				'geoname_id' => '3573345',
 				'neighbours' => '',
-			),
-			'BN' => array(
+			],
+			'BN' => [
 				'name' => elgg_echo('country:BN'),
 				'iso' => 'BN',
 				'iso3' => 'BRN',
@@ -685,8 +702,8 @@ class Countries {
 				'languages' => 'ms-BN,en-BN',
 				'geoname_id' => '1820814',
 				'neighbours' => 'MY',
-			),
-			'BO' => array(
+			],
+			'BO' => [
 				'name' => elgg_echo('country:BO'),
 				'iso' => 'BO',
 				'iso3' => 'BOL',
@@ -705,8 +722,8 @@ class Countries {
 				'languages' => 'es-BO,qu,ay',
 				'geoname_id' => '3923057',
 				'neighbours' => 'PE,CL,PY,BR,AR',
-			),
-			'BR' => array(
+			],
+			'BR' => [
 				'name' => elgg_echo('country:BR'),
 				'iso' => 'BR',
 				'iso3' => 'BRA',
@@ -725,8 +742,8 @@ class Countries {
 				'languages' => 'pt-BR',
 				'geoname_id' => '3469034',
 				'neighbours' => 'SR,PE,BO,UY,GY,PY,GF,VE,CO,AR',
-			),
-			'BS' => array(
+			],
+			'BS' => [
 				'name' => elgg_echo('country:BS'),
 				'iso' => 'BS',
 				'iso3' => 'BHS',
@@ -745,8 +762,8 @@ class Countries {
 				'languages' => 'en-BS',
 				'geoname_id' => '3572887',
 				'neighbours' => '',
-			),
-			'BT' => array(
+			],
+			'BT' => [
 				'name' => elgg_echo('country:BT'),
 				'iso' => 'BT',
 				'iso3' => 'BTN',
@@ -765,8 +782,8 @@ class Countries {
 				'languages' => 'dz',
 				'geoname_id' => '1252634',
 				'neighbours' => 'CN,IN',
-			),
-			'BV' => array(
+			],
+			'BV' => [
 				'name' => elgg_echo('country:BV'),
 				'iso' => 'BV',
 				'iso3' => 'BVT',
@@ -785,8 +802,8 @@ class Countries {
 				'languages' => '',
 				'geoname_id' => '3371123',
 				'neighbours' => '',
-			),
-			'BW' => array(
+			],
+			'BW' => [
 				'name' => elgg_echo('country:BW'),
 				'iso' => 'BW',
 				'iso3' => 'BWA',
@@ -805,8 +822,8 @@ class Countries {
 				'languages' => 'en-BW,tn-BW',
 				'geoname_id' => '933860',
 				'neighbours' => 'ZW,ZA,NA',
-			),
-			'BY' => array(
+			],
+			'BY' => [
 				'name' => elgg_echo('country:BY'),
 				'iso' => 'BY',
 				'iso3' => 'BLR',
@@ -825,8 +842,8 @@ class Countries {
 				'languages' => 'be,cru',
 				'geoname_id' => '630336',
 				'neighbours' => 'PL,LT,UA,RU,LV',
-			),
-			'BZ' => array(
+			],
+			'BZ' => [
 				'name' => elgg_echo('country:BZ'),
 				'iso' => 'BZ',
 				'iso3' => 'BLZ',
@@ -845,8 +862,8 @@ class Countries {
 				'languages' => 'en-BZ,es',
 				'geoname_id' => '3582678',
 				'neighbours' => 'GT,MX',
-			),
-			'CA' => array(
+			],
+			'CA' => [
 				'name' => elgg_echo('country:CA'),
 				'iso' => 'CA',
 				'iso3' => 'CAN',
@@ -865,8 +882,8 @@ class Countries {
 				'languages' => 'en-CA,fr-CA',
 				'geoname_id' => '6251999',
 				'neighbours' => 'US',
-			),
-			'CC' => array(
+			],
+			'CC' => [
 				'name' => elgg_echo('country:CC'),
 				'iso' => 'CC',
 				'iso3' => 'CCK',
@@ -885,8 +902,8 @@ class Countries {
 				'languages' => 'ms-CC,en',
 				'geoname_id' => '1547376',
 				'neighbours' => '',
-			),
-			'CD' => array(
+			],
+			'CD' => [
 				'name' => elgg_echo('country:CD'),
 				'iso' => 'CD',
 				'iso3' => 'COD',
@@ -905,8 +922,8 @@ class Countries {
 				'languages' => 'fr-CD,ln,kg',
 				'geoname_id' => '203312',
 				'neighbours' => 'TZ,CF,SD,RW,ZM,BI,UG,CG,AO',
-			),
-			'CF' => array(
+			],
+			'CF' => [
 				'name' => elgg_echo('country:CF'),
 				'iso' => 'CF',
 				'iso3' => 'CAF',
@@ -925,8 +942,8 @@ class Countries {
 				'languages' => 'fr-CF,ln,kg',
 				'geoname_id' => '239880',
 				'neighbours' => 'TD,SD,CD,CM,CG',
-			),
-			'CG' => array(
+			],
+			'CG' => [
 				'name' => elgg_echo('country:CG'),
 				'iso' => 'CG',
 				'iso3' => 'COG',
@@ -945,8 +962,8 @@ class Countries {
 				'languages' => 'fr-CG,kg,ln-CG',
 				'geoname_id' => '2260494',
 				'neighbours' => 'CF,GA,CD,CM,AO',
-			),
-			'CH' => array(
+			],
+			'CH' => [
 				'name' => elgg_echo('country:CH'),
 				'iso' => 'CH',
 				'iso3' => 'CHE',
@@ -965,8 +982,8 @@ class Countries {
 				'languages' => 'de-CH,fr-CH,it-CH,rm',
 				'geoname_id' => '2658434',
 				'neighbours' => 'DE,IT,LI,FR,AT',
-			),
-			'CI' => array(
+			],
+			'CI' => [
 				'name' => elgg_echo('country:CI'),
 				'iso' => 'CI',
 				'iso3' => 'CIV',
@@ -985,8 +1002,8 @@ class Countries {
 				'languages' => 'fr-CI',
 				'geoname_id' => '2287781',
 				'neighbours' => 'LR,GH,GN,BF,ML',
-			),
-			'CK' => array(
+			],
+			'CK' => [
 				'name' => elgg_echo('country:CK'),
 				'iso' => 'CK',
 				'iso3' => 'COK',
@@ -1005,8 +1022,8 @@ class Countries {
 				'languages' => 'en-CK,mi',
 				'geoname_id' => '1899402',
 				'neighbours' => '',
-			),
-			'CL' => array(
+			],
+			'CL' => [
 				'name' => elgg_echo('country:CL'),
 				'iso' => 'CL',
 				'iso3' => 'CHL',
@@ -1025,8 +1042,8 @@ class Countries {
 				'languages' => 'es-CL',
 				'geoname_id' => '3895114',
 				'neighbours' => 'PE,BO,AR',
-			),
-			'CM' => array(
+			],
+			'CM' => [
 				'name' => elgg_echo('country:CM'),
 				'iso' => 'CM',
 				'iso3' => 'CMR',
@@ -1045,8 +1062,8 @@ class Countries {
 				'languages' => 'en-CM,fr-CM',
 				'geoname_id' => '2233387',
 				'neighbours' => 'TD,CF,GA,GQ,CG,NG',
-			),
-			'CN' => array(
+			],
+			'CN' => [
 				'name' => elgg_echo('country:CN'),
 				'iso' => 'CN',
 				'iso3' => 'CHN',
@@ -1065,8 +1082,8 @@ class Countries {
 				'languages' => 'zh-CN,yue,wuu',
 				'geoname_id' => '1814991',
 				'neighbours' => 'LA,BT,TJ,KZ,MN,AF,NP,MM,KG,PK,KP,RU,VN,IN',
-			),
-			'CO' => array(
+			],
+			'CO' => [
 				'name' => elgg_echo('country:CO'),
 				'iso' => 'CO',
 				'iso3' => 'COL',
@@ -1085,8 +1102,8 @@ class Countries {
 				'languages' => 'es-CO',
 				'geoname_id' => '3686110',
 				'neighbours' => 'EC,PE,PA,BR,VE',
-			),
-			'CR' => array(
+			],
+			'CR' => [
 				'name' => elgg_echo('country:CR'),
 				'iso' => 'CR',
 				'iso3' => 'CRI',
@@ -1105,8 +1122,8 @@ class Countries {
 				'languages' => 'es-CR,en',
 				'geoname_id' => '3624060',
 				'neighbours' => 'PA,NI',
-			),
-			'CU' => array(
+			],
+			'CU' => [
 				'name' => elgg_echo('country:CU'),
 				'iso' => 'CU',
 				'iso3' => 'CUB',
@@ -1125,8 +1142,8 @@ class Countries {
 				'languages' => 'es-CU',
 				'geoname_id' => '3562981',
 				'neighbours' => 'US',
-			),
-			'CV' => array(
+			],
+			'CV' => [
 				'name' => elgg_echo('country:CV'),
 				'iso' => 'CV',
 				'iso3' => 'CPV',
@@ -1145,8 +1162,8 @@ class Countries {
 				'languages' => 'pt-CV',
 				'geoname_id' => '3374766',
 				'neighbours' => '',
-			),
-			'CX' => array(
+			],
+			'CX' => [
 				'name' => elgg_echo('country:CX'),
 				'iso' => 'CX',
 				'iso3' => 'CXR',
@@ -1165,8 +1182,8 @@ class Countries {
 				'languages' => 'en,zh,ms-CC',
 				'geoname_id' => '2078138',
 				'neighbours' => '',
-			),
-			'CY' => array(
+			],
+			'CY' => [
 				'name' => elgg_echo('country:CY'),
 				'iso' => 'CY',
 				'iso3' => 'CYP',
@@ -1185,8 +1202,8 @@ class Countries {
 				'languages' => 'el-CY,tr-CY,en',
 				'geoname_id' => '146669',
 				'neighbours' => '',
-			),
-			'CZ' => array(
+			],
+			'CZ' => [
 				'name' => elgg_echo('country:CZ'),
 				'iso' => 'CZ',
 				'iso3' => 'CZE',
@@ -1205,8 +1222,8 @@ class Countries {
 				'languages' => 'cs,sk',
 				'geoname_id' => '3077311',
 				'neighbours' => 'PL,DE,SK,AT',
-			),
-			'DE' => array(
+			],
+			'DE' => [
 				'name' => elgg_echo('country:DE'),
 				'iso' => 'DE',
 				'iso3' => 'DEU',
@@ -1225,8 +1242,8 @@ class Countries {
 				'languages' => 'de',
 				'geoname_id' => '2921044',
 				'neighbours' => 'CH,PL,NL,DK,BE,CZ,LU,FR,AT',
-			),
-			'DJ' => array(
+			],
+			'DJ' => [
 				'name' => elgg_echo('country:DJ'),
 				'iso' => 'DJ',
 				'iso3' => 'DJI',
@@ -1245,8 +1262,8 @@ class Countries {
 				'languages' => 'fr-DJ,ar,so-DJ,aa',
 				'geoname_id' => '223816',
 				'neighbours' => 'ER,ET,SO',
-			),
-			'DK' => array(
+			],
+			'DK' => [
 				'name' => elgg_echo('country:DK'),
 				'iso' => 'DK',
 				'iso3' => 'DNK',
@@ -1265,8 +1282,8 @@ class Countries {
 				'languages' => 'da-DK,en,fo,de-DK',
 				'geoname_id' => '2623032',
 				'neighbours' => 'DE',
-			),
-			'DM' => array(
+			],
+			'DM' => [
 				'name' => elgg_echo('country:DM'),
 				'iso' => 'DM',
 				'iso3' => 'DMA',
@@ -1285,8 +1302,8 @@ class Countries {
 				'languages' => 'en-DM',
 				'geoname_id' => '3575830',
 				'neighbours' => '',
-			),
-			'DO' => array(
+			],
+			'DO' => [
 				'name' => elgg_echo('country:DO'),
 				'iso' => 'DO',
 				'iso3' => 'DOM',
@@ -1305,8 +1322,8 @@ class Countries {
 				'languages' => 'es-DO',
 				'geoname_id' => '3508796',
 				'neighbours' => 'HT',
-			),
-			'DZ' => array(
+			],
+			'DZ' => [
 				'name' => elgg_echo('country:DZ'),
 				'iso' => 'DZ',
 				'iso3' => 'DZA',
@@ -1325,8 +1342,8 @@ class Countries {
 				'languages' => 'ar-DZ',
 				'geoname_id' => '2589581',
 				'neighbours' => 'NE,EH,LY,MR,TN,MA,ML',
-			),
-			'EC' => array(
+			],
+			'EC' => [
 				'name' => elgg_echo('country:EC'),
 				'iso' => 'EC',
 				'iso3' => 'ECU',
@@ -1345,8 +1362,8 @@ class Countries {
 				'languages' => 'es-EC',
 				'geoname_id' => '3658394',
 				'neighbours' => 'PE,CO',
-			),
-			'EE' => array(
+			],
+			'EE' => [
 				'name' => elgg_echo('country:EE'),
 				'iso' => 'EE',
 				'iso3' => 'EST',
@@ -1365,8 +1382,8 @@ class Countries {
 				'languages' => 'et,ru',
 				'geoname_id' => '453733',
 				'neighbours' => 'RU,LV',
-			),
-			'EG' => array(
+			],
+			'EG' => [
 				'name' => elgg_echo('country:EG'),
 				'iso' => 'EG',
 				'iso3' => 'EGY',
@@ -1385,8 +1402,8 @@ class Countries {
 				'languages' => 'ar-EG,en,fr',
 				'geoname_id' => '357994',
 				'neighbours' => 'LY,SD,IL',
-			),
-			'EH' => array(
+			],
+			'EH' => [
 				'name' => elgg_echo('country:EH'),
 				'iso' => 'EH',
 				'iso3' => 'ESH',
@@ -1405,8 +1422,8 @@ class Countries {
 				'languages' => 'ar,mey',
 				'geoname_id' => '2461445',
 				'neighbours' => 'DZ,MR,MA',
-			),
-			'ER' => array(
+			],
+			'ER' => [
 				'name' => elgg_echo('country:ER'),
 				'iso' => 'ER',
 				'iso3' => 'ERI',
@@ -1425,8 +1442,8 @@ class Countries {
 				'languages' => 'aa-ER,ar,tig,kun,ti-ER',
 				'geoname_id' => '338010',
 				'neighbours' => 'ET,SD,DJ',
-			),
-			'ES' => array(
+			],
+			'ES' => [
 				'name' => elgg_echo('country:ES'),
 				'iso' => 'ES',
 				'iso3' => 'ESP',
@@ -1445,8 +1462,8 @@ class Countries {
 				'languages' => 'es-ES,ca,gl,eu',
 				'geoname_id' => '2510769',
 				'neighbours' => 'AD,PT,GI,FR,MA',
-			),
-			'ET' => array(
+			],
+			'ET' => [
 				'name' => elgg_echo('country:ET'),
 				'iso' => 'ET',
 				'iso3' => 'ETH',
@@ -1465,8 +1482,8 @@ class Countries {
 				'languages' => 'am,en-ET,om-ET,ti-ET,so-ET,sid,so-ET',
 				'geoname_id' => '337996',
 				'neighbours' => 'ER,KE,SD,SO,DJ',
-			),
-			'FI' => array(
+			],
+			'FI' => [
 				'name' => elgg_echo('country:FI'),
 				'iso' => 'FI',
 				'iso3' => 'FIN',
@@ -1485,8 +1502,8 @@ class Countries {
 				'languages' => 'fi-FI,sv-FI,smn',
 				'geoname_id' => '660013',
 				'neighbours' => 'NO,RU,SE',
-			),
-			'FJ' => array(
+			],
+			'FJ' => [
 				'name' => elgg_echo('country:FJ'),
 				'iso' => 'FJ',
 				'iso3' => 'FJI',
@@ -1505,8 +1522,8 @@ class Countries {
 				'languages' => 'en-FJ,fj',
 				'geoname_id' => '2205218',
 				'neighbours' => '',
-			),
-			'FK' => array(
+			],
+			'FK' => [
 				'name' => elgg_echo('country:FK'),
 				'iso' => 'FK',
 				'iso3' => 'FLK',
@@ -1525,8 +1542,8 @@ class Countries {
 				'languages' => 'en-FK',
 				'geoname_id' => '3474414',
 				'neighbours' => '',
-			),
-			'FM' => array(
+			],
+			'FM' => [
 				'name' => elgg_echo('country:FM'),
 				'iso' => 'FM',
 				'iso3' => 'FSM',
@@ -1545,8 +1562,8 @@ class Countries {
 				'languages' => 'en-FM,chk,pon,yap,kos,uli,woe,nkr,kpg',
 				'geoname_id' => '2081918',
 				'neighbours' => '',
-			),
-			'FO' => array(
+			],
+			'FO' => [
 				'name' => elgg_echo('country:FO'),
 				'iso' => 'FO',
 				'iso3' => 'FRO',
@@ -1565,8 +1582,8 @@ class Countries {
 				'languages' => 'fo,da-FO',
 				'geoname_id' => '2622320',
 				'neighbours' => '',
-			),
-			'FR' => array(
+			],
+			'FR' => [
 				'name' => elgg_echo('country:FR'),
 				'iso' => 'FR',
 				'iso3' => 'FRA',
@@ -1585,8 +1602,8 @@ class Countries {
 				'languages' => 'fr-FR,frp,br,co,ca,eu',
 				'geoname_id' => '3017382',
 				'neighbours' => 'CH,DE,BE,LU,IT,AD,MC,ES',
-			),
-			'GA' => array(
+			],
+			'GA' => [
 				'name' => elgg_echo('country:GA'),
 				'iso' => 'GA',
 				'iso3' => 'GAB',
@@ -1605,8 +1622,8 @@ class Countries {
 				'languages' => 'fr-GA',
 				'geoname_id' => '2400553',
 				'neighbours' => 'CM,GQ,CG',
-			),
-			'GB' => array(
+			],
+			'GB' => [
 				'name' => elgg_echo('country:GB'),
 				'iso' => 'GB',
 				'iso3' => 'GBR',
@@ -1625,8 +1642,8 @@ class Countries {
 				'languages' => 'en-GB,cy-GB,gd',
 				'geoname_id' => '2635167',
 				'neighbours' => 'IE',
-			),
-			'GD' => array(
+			],
+			'GD' => [
 				'name' => elgg_echo('country:GD'),
 				'iso' => 'GD',
 				'iso3' => 'GRD',
@@ -1645,8 +1662,8 @@ class Countries {
 				'languages' => 'en-GD',
 				'geoname_id' => '3580239',
 				'neighbours' => '',
-			),
-			'GE' => array(
+			],
+			'GE' => [
 				'name' => elgg_echo('country:GE'),
 				'iso' => 'GE',
 				'iso3' => 'GEO',
@@ -1665,8 +1682,8 @@ class Countries {
 				'languages' => 'ka,ru,hy,az',
 				'geoname_id' => '614540',
 				'neighbours' => 'AM,AZ,TR,RU',
-			),
-			'GF' => array(
+			],
+			'GF' => [
 				'name' => elgg_echo('country:GF'),
 				'iso' => 'GF',
 				'iso3' => 'GUF',
@@ -1685,8 +1702,8 @@ class Countries {
 				'languages' => 'fr-GF',
 				'geoname_id' => '3381670',
 				'neighbours' => 'SR,BR',
-			),
-			'GG' => array(
+			],
+			'GG' => [
 				'name' => elgg_echo('country:GG'),
 				'iso' => 'GG',
 				'iso3' => 'GGY',
@@ -1705,8 +1722,8 @@ class Countries {
 				'languages' => 'en,fr',
 				'geoname_id' => '3042362',
 				'neighbours' => '',
-			),
-			'GH' => array(
+			],
+			'GH' => [
 				'name' => elgg_echo('country:GH'),
 				'iso' => 'GH',
 				'iso3' => 'GHA',
@@ -1725,8 +1742,8 @@ class Countries {
 				'languages' => 'en-GH,ak,ee,tw',
 				'geoname_id' => '2300660',
 				'neighbours' => 'CI,TG,BF',
-			),
-			'GI' => array(
+			],
+			'GI' => [
 				'name' => elgg_echo('country:GI'),
 				'iso' => 'GI',
 				'iso3' => 'GIB',
@@ -1745,8 +1762,8 @@ class Countries {
 				'languages' => 'en-GI,es,it,pt',
 				'geoname_id' => '2411586',
 				'neighbours' => 'ES',
-			),
-			'GL' => array(
+			],
+			'GL' => [
 				'name' => elgg_echo('country:GL'),
 				'iso' => 'GL',
 				'iso3' => 'GRL',
@@ -1765,8 +1782,8 @@ class Countries {
 				'languages' => 'kl,da-GL,en',
 				'geoname_id' => '3425505',
 				'neighbours' => '',
-			),
-			'GM' => array(
+			],
+			'GM' => [
 				'name' => elgg_echo('country:GM'),
 				'iso' => 'GM',
 				'iso3' => 'GMB',
@@ -1785,8 +1802,8 @@ class Countries {
 				'languages' => 'en-GM,mnk,wof,wo,ff',
 				'geoname_id' => '2413451',
 				'neighbours' => 'SN',
-			),
-			'GN' => array(
+			],
+			'GN' => [
 				'name' => elgg_echo('country:GN'),
 				'iso' => 'GN',
 				'iso3' => 'GIN',
@@ -1805,8 +1822,8 @@ class Countries {
 				'languages' => 'fr-GN',
 				'geoname_id' => '2420477',
 				'neighbours' => 'LR,SN,SL,CI,GW,ML',
-			),
-			'GP' => array(
+			],
+			'GP' => [
 				'name' => elgg_echo('country:GP'),
 				'iso' => 'GP',
 				'iso3' => 'GLP',
@@ -1825,8 +1842,8 @@ class Countries {
 				'languages' => 'fr-GP',
 				'geoname_id' => '3579143',
 				'neighbours' => 'AN',
-			),
-			'GQ' => array(
+			],
+			'GQ' => [
 				'name' => elgg_echo('country:GQ'),
 				'iso' => 'GQ',
 				'iso3' => 'GNQ',
@@ -1845,8 +1862,8 @@ class Countries {
 				'languages' => 'es-GQ,fr',
 				'geoname_id' => '2309096',
 				'neighbours' => 'GA,CM',
-			),
-			'GR' => array(
+			],
+			'GR' => [
 				'name' => elgg_echo('country:GR'),
 				'iso' => 'GR',
 				'iso3' => 'GRC',
@@ -1865,8 +1882,8 @@ class Countries {
 				'languages' => 'el-GR,en,fr',
 				'geoname_id' => '390903',
 				'neighbours' => 'AL,MK,TR,BG',
-			),
-			'GS' => array(
+			],
+			'GS' => [
 				'name' => elgg_echo('country:GS'),
 				'iso' => 'GS',
 				'iso3' => 'SGS',
@@ -1885,8 +1902,8 @@ class Countries {
 				'languages' => 'en',
 				'geoname_id' => '3474415',
 				'neighbours' => '',
-			),
-			'GT' => array(
+			],
+			'GT' => [
 				'name' => elgg_echo('country:GT'),
 				'iso' => 'GT',
 				'iso3' => 'GTM',
@@ -1905,8 +1922,8 @@ class Countries {
 				'languages' => 'es-GT',
 				'geoname_id' => '3595528',
 				'neighbours' => 'MX,HN,BZ,SV',
-			),
-			'GU' => array(
+			],
+			'GU' => [
 				'name' => elgg_echo('country:GU'),
 				'iso' => 'GU',
 				'iso3' => 'GUM',
@@ -1925,8 +1942,8 @@ class Countries {
 				'languages' => 'en-GU,ch-GU',
 				'geoname_id' => '4043988',
 				'neighbours' => '',
-			),
-			'GW' => array(
+			],
+			'GW' => [
 				'name' => elgg_echo('country:GW'),
 				'iso' => 'GW',
 				'iso3' => 'GNB',
@@ -1945,8 +1962,8 @@ class Countries {
 				'languages' => 'pt-GW,pov',
 				'geoname_id' => '2372248',
 				'neighbours' => 'SN,GN',
-			),
-			'GY' => array(
+			],
+			'GY' => [
 				'name' => elgg_echo('country:GY'),
 				'iso' => 'GY',
 				'iso3' => 'GUY',
@@ -1965,8 +1982,8 @@ class Countries {
 				'languages' => 'en-GY',
 				'geoname_id' => '3378535',
 				'neighbours' => 'SR,BR,VE',
-			),
-			'HK' => array(
+			],
+			'HK' => [
 				'name' => elgg_echo('country:HK'),
 				'iso' => 'HK',
 				'iso3' => 'HKG',
@@ -1985,8 +2002,8 @@ class Countries {
 				'languages' => 'zh-HK,yue,zh,en',
 				'geoname_id' => '1819730',
 				'neighbours' => '',
-			),
-			'HM' => array(
+			],
+			'HM' => [
 				'name' => elgg_echo('country:HM'),
 				'iso' => 'HM',
 				'iso3' => 'HMD',
@@ -2005,8 +2022,8 @@ class Countries {
 				'languages' => '',
 				'geoname_id' => '1547314',
 				'neighbours' => '',
-			),
-			'HN' => array(
+			],
+			'HN' => [
 				'name' => elgg_echo('country:HN'),
 				'iso' => 'HN',
 				'iso3' => 'HND',
@@ -2025,8 +2042,8 @@ class Countries {
 				'languages' => 'es-HN',
 				'geoname_id' => '3608932',
 				'neighbours' => 'GT,NI,SV',
-			),
-			'HR' => array(
+			],
+			'HR' => [
 				'name' => elgg_echo('country:HR'),
 				'iso' => 'HR',
 				'iso3' => 'HRV',
@@ -2045,8 +2062,8 @@ class Countries {
 				'languages' => 'hr-HR,sr',
 				'geoname_id' => '3202326',
 				'neighbours' => 'HU,SI,CS,BA,ME,RS',
-			),
-			'HT' => array(
+			],
+			'HT' => [
 				'name' => elgg_echo('country:HT'),
 				'iso' => 'HT',
 				'iso3' => 'HTI',
@@ -2065,8 +2082,8 @@ class Countries {
 				'languages' => 'ht,fr-HT',
 				'geoname_id' => '3723988',
 				'neighbours' => 'DO',
-			),
-			'HU' => array(
+			],
+			'HU' => [
 				'name' => elgg_echo('country:HU'),
 				'iso' => 'HU',
 				'iso3' => 'HUN',
@@ -2085,8 +2102,8 @@ class Countries {
 				'languages' => 'hu-HU',
 				'geoname_id' => '719819',
 				'neighbours' => 'SK,SI,RO,UA,CS,HR,AT,RS',
-			),
-			'ID' => array(
+			],
+			'ID' => [
 				'name' => elgg_echo('country:ID'),
 				'iso' => 'ID',
 				'iso3' => 'IDN',
@@ -2105,8 +2122,8 @@ class Countries {
 				'languages' => 'id,en,nl,jv',
 				'geoname_id' => '1643084',
 				'neighbours' => 'PG,TL,MY',
-			),
-			'IE' => array(
+			],
+			'IE' => [
 				'name' => elgg_echo('country:IE'),
 				'iso' => 'IE',
 				'iso3' => 'IRL',
@@ -2125,8 +2142,8 @@ class Countries {
 				'languages' => 'en-IE,ga-IE',
 				'geoname_id' => '2963597',
 				'neighbours' => 'GB',
-			),
-			'IL' => array(
+			],
+			'IL' => [
 				'name' => elgg_echo('country:IL'),
 				'iso' => 'IL',
 				'iso3' => 'ISR',
@@ -2145,8 +2162,8 @@ class Countries {
 				'languages' => 'he,ar-IL,en-IL,',
 				'geoname_id' => '294640',
 				'neighbours' => 'SY,JO,LB,EG,PS',
-			),
-			'IM' => array(
+			],
+			'IM' => [
 				'name' => elgg_echo('country:IM'),
 				'iso' => 'IM',
 				'iso3' => 'IMN',
@@ -2165,8 +2182,8 @@ class Countries {
 				'languages' => 'en,gv',
 				'geoname_id' => '3042225',
 				'neighbours' => '',
-			),
-			'IN' => array(
+			],
+			'IN' => [
 				'name' => elgg_echo('country:IN'),
 				'iso' => 'IN',
 				'iso3' => 'IND',
@@ -2185,8 +2202,8 @@ class Countries {
 				'languages' => 'en-IN,hi,bn,te,mr,ta,ur,gu,ml,kn,or,pa,as,ks,sd,sa,ur-IN',
 				'geoname_id' => '1269750',
 				'neighbours' => 'CN,NP,MM,BT,PK,BD',
-			),
-			'IO' => array(
+			],
+			'IO' => [
 				'name' => elgg_echo('country:IO'),
 				'iso' => 'IO',
 				'iso3' => 'IOT',
@@ -2205,8 +2222,8 @@ class Countries {
 				'languages' => 'en-IO',
 				'geoname_id' => '1282588',
 				'neighbours' => '',
-			),
-			'IQ' => array(
+			],
+			'IQ' => [
 				'name' => elgg_echo('country:IQ'),
 				'iso' => 'IQ',
 				'iso3' => 'IRQ',
@@ -2225,8 +2242,8 @@ class Countries {
 				'languages' => 'ar-IQ,ku,hy',
 				'geoname_id' => '99237',
 				'neighbours' => 'SY,SA,IR,JO,TR,KW',
-			),
-			'IR' => array(
+			],
+			'IR' => [
 				'name' => elgg_echo('country:IR'),
 				'iso' => 'IR',
 				'iso3' => 'IRN',
@@ -2245,8 +2262,8 @@ class Countries {
 				'languages' => 'fa-IR,ku',
 				'geoname_id' => '130758',
 				'neighbours' => 'TM,AF,IQ,AM,PK,AZ,TR',
-			),
-			'IS' => array(
+			],
+			'IS' => [
 				'name' => elgg_echo('country:IS'),
 				'iso' => 'IS',
 				'iso3' => 'ISL',
@@ -2265,8 +2282,8 @@ class Countries {
 				'languages' => 'is,en,de,da,sv,no',
 				'geoname_id' => '2629691',
 				'neighbours' => '',
-			),
-			'IT' => array(
+			],
+			'IT' => [
 				'name' => elgg_echo('country:IT'),
 				'iso' => 'IT',
 				'iso3' => 'ITA',
@@ -2285,8 +2302,8 @@ class Countries {
 				'languages' => 'it-IT,de-IT,fr-IT,sl',
 				'geoname_id' => '3175395',
 				'neighbours' => 'CH,VA,SI,SM,FR,AT',
-			),
-			'JE' => array(
+			],
+			'JE' => [
 				'name' => elgg_echo('country:JE'),
 				'iso' => 'JE',
 				'iso3' => 'JEY',
@@ -2305,8 +2322,8 @@ class Countries {
 				'languages' => 'en,pt',
 				'geoname_id' => '3042142',
 				'neighbours' => '',
-			),
-			'JM' => array(
+			],
+			'JM' => [
 				'name' => elgg_echo('country:JM'),
 				'iso' => 'JM',
 				'iso3' => 'JAM',
@@ -2325,8 +2342,8 @@ class Countries {
 				'languages' => 'en-JM',
 				'geoname_id' => '3489940',
 				'neighbours' => '',
-			),
-			'JO' => array(
+			],
+			'JO' => [
 				'name' => elgg_echo('country:JO'),
 				'iso' => 'JO',
 				'iso3' => 'JOR',
@@ -2345,8 +2362,8 @@ class Countries {
 				'languages' => 'ar-JO,en',
 				'geoname_id' => '248816',
 				'neighbours' => 'SY,SA,IQ,IL,PS',
-			),
-			'JP' => array(
+			],
+			'JP' => [
 				'name' => elgg_echo('country:JP'),
 				'iso' => 'JP',
 				'iso3' => 'JPN',
@@ -2365,8 +2382,8 @@ class Countries {
 				'languages' => 'ja',
 				'geoname_id' => '1861060',
 				'neighbours' => '',
-			),
-			'KE' => array(
+			],
+			'KE' => [
 				'name' => elgg_echo('country:KE'),
 				'iso' => 'KE',
 				'iso3' => 'KEN',
@@ -2385,8 +2402,8 @@ class Countries {
 				'languages' => 'en-KE,sw-KE',
 				'geoname_id' => '192950',
 				'neighbours' => 'ET,TZ,SD,SO,UG',
-			),
-			'KG' => array(
+			],
+			'KG' => [
 				'name' => elgg_echo('country:KG'),
 				'iso' => 'KG',
 				'iso3' => 'KGZ',
@@ -2405,8 +2422,8 @@ class Countries {
 				'languages' => 'ky,uz,ru',
 				'geoname_id' => '1527747',
 				'neighbours' => 'CN,TJ,UZ,KZ',
-			),
-			'KH' => array(
+			],
+			'KH' => [
 				'name' => elgg_echo('country:KH'),
 				'iso' => 'KH',
 				'iso3' => 'KHM',
@@ -2425,8 +2442,8 @@ class Countries {
 				'languages' => 'km,fr,en',
 				'geoname_id' => '1831722',
 				'neighbours' => 'LA,TH,VN',
-			),
-			'KI' => array(
+			],
+			'KI' => [
 				'name' => elgg_echo('country:KI'),
 				'iso' => 'KI',
 				'iso3' => 'KIR',
@@ -2445,8 +2462,8 @@ class Countries {
 				'languages' => 'en-KI,gil',
 				'geoname_id' => '4030945',
 				'neighbours' => '',
-			),
-			'KM' => array(
+			],
+			'KM' => [
 				'name' => elgg_echo('country:KM'),
 				'iso' => 'KM',
 				'iso3' => 'COM',
@@ -2465,8 +2482,8 @@ class Countries {
 				'languages' => 'ar,fr-KM',
 				'geoname_id' => '921929',
 				'neighbours' => '',
-			),
-			'KN' => array(
+			],
+			'KN' => [
 				'name' => elgg_echo('country:KN'),
 				'iso' => 'KN',
 				'iso3' => 'KNA',
@@ -2485,8 +2502,8 @@ class Countries {
 				'languages' => 'en-KN',
 				'geoname_id' => '3575174',
 				'neighbours' => '',
-			),
-			'KP' => array(
+			],
+			'KP' => [
 				'name' => elgg_echo('country:KP'),
 				'iso' => 'KP',
 				'iso3' => 'PRK',
@@ -2505,8 +2522,8 @@ class Countries {
 				'languages' => 'ko-KP',
 				'geoname_id' => '1873107',
 				'neighbours' => 'CN,KR,RU',
-			),
-			'KR' => array(
+			],
+			'KR' => [
 				'name' => elgg_echo('country:KR'),
 				'iso' => 'KR',
 				'iso3' => 'KOR',
@@ -2525,8 +2542,8 @@ class Countries {
 				'languages' => 'ko-KR,en',
 				'geoname_id' => '1835841',
 				'neighbours' => 'KP',
-			),
-			'KW' => array(
+			],
+			'KW' => [
 				'name' => elgg_echo('country:KW'),
 				'iso' => 'KW',
 				'iso3' => 'KWT',
@@ -2545,8 +2562,8 @@ class Countries {
 				'languages' => 'ar-KW,en',
 				'geoname_id' => '285570',
 				'neighbours' => 'SA,IQ',
-			),
-			'KY' => array(
+			],
+			'KY' => [
 				'name' => elgg_echo('country:KY'),
 				'iso' => 'KY',
 				'iso3' => 'CYM',
@@ -2565,8 +2582,8 @@ class Countries {
 				'languages' => 'en-KY',
 				'geoname_id' => '3580718',
 				'neighbours' => '',
-			),
-			'KZ' => array(
+			],
+			'KZ' => [
 				'name' => elgg_echo('country:KZ'),
 				'iso' => 'KZ',
 				'iso3' => 'KAZ',
@@ -2585,8 +2602,8 @@ class Countries {
 				'languages' => 'kk,ru',
 				'geoname_id' => '1522867',
 				'neighbours' => 'TM,CN,KG,UZ,RU',
-			),
-			'LA' => array(
+			],
+			'LA' => [
 				'name' => elgg_echo('country:LA'),
 				'iso' => 'LA',
 				'iso3' => 'LAO',
@@ -2605,8 +2622,8 @@ class Countries {
 				'languages' => 'lo,fr,en',
 				'geoname_id' => '1655842',
 				'neighbours' => 'CN,MM,KH,TH,VN',
-			),
-			'LB' => array(
+			],
+			'LB' => [
 				'name' => elgg_echo('country:LB'),
 				'iso' => 'LB',
 				'iso3' => 'LBN',
@@ -2625,8 +2642,8 @@ class Countries {
 				'languages' => 'ar-LB,fr-LB,en,hy',
 				'geoname_id' => '272103',
 				'neighbours' => 'SY,IL',
-			),
-			'LC' => array(
+			],
+			'LC' => [
 				'name' => elgg_echo('country:LC'),
 				'iso' => 'LC',
 				'iso3' => 'LCA',
@@ -2645,8 +2662,8 @@ class Countries {
 				'languages' => 'en-LC',
 				'geoname_id' => '3576468',
 				'neighbours' => '',
-			),
-			'LI' => array(
+			],
+			'LI' => [
 				'name' => elgg_echo('country:LI'),
 				'iso' => 'LI',
 				'iso3' => 'LIE',
@@ -2665,8 +2682,8 @@ class Countries {
 				'languages' => 'de-LI',
 				'geoname_id' => '3042058',
 				'neighbours' => 'CH,AT',
-			),
-			'LK' => array(
+			],
+			'LK' => [
 				'name' => elgg_echo('country:LK'),
 				'iso' => 'LK',
 				'iso3' => 'LKA',
@@ -2685,8 +2702,8 @@ class Countries {
 				'languages' => 'si,ta,en',
 				'geoname_id' => '1227603',
 				'neighbours' => '',
-			),
-			'LR' => array(
+			],
+			'LR' => [
 				'name' => elgg_echo('country:LR'),
 				'iso' => 'LR',
 				'iso3' => 'LBR',
@@ -2705,8 +2722,8 @@ class Countries {
 				'languages' => 'en-LR',
 				'geoname_id' => '2275384',
 				'neighbours' => 'SL,CI,GN',
-			),
-			'LS' => array(
+			],
+			'LS' => [
 				'name' => elgg_echo('country:LS'),
 				'iso' => 'LS',
 				'iso3' => 'LSO',
@@ -2725,8 +2742,8 @@ class Countries {
 				'languages' => 'en-LS,st,zu,xh',
 				'geoname_id' => '932692',
 				'neighbours' => 'ZA',
-			),
-			'LT' => array(
+			],
+			'LT' => [
 				'name' => elgg_echo('country:LT'),
 				'iso' => 'LT',
 				'iso3' => 'LTU',
@@ -2745,8 +2762,8 @@ class Countries {
 				'languages' => 'lt,ru,pl',
 				'geoname_id' => '597427',
 				'neighbours' => 'PL,BY,RU,LV',
-			),
-			'LU' => array(
+			],
+			'LU' => [
 				'name' => elgg_echo('country:LU'),
 				'iso' => 'LU',
 				'iso3' => 'LUX',
@@ -2765,8 +2782,8 @@ class Countries {
 				'languages' => 'lb,de-LU,fr-LU',
 				'geoname_id' => '2960313',
 				'neighbours' => 'DE,BE,FR',
-			),
-			'LV' => array(
+			],
+			'LV' => [
 				'name' => elgg_echo('country:LV'),
 				'iso' => 'LV',
 				'iso3' => 'LVA',
@@ -2785,8 +2802,8 @@ class Countries {
 				'languages' => 'lv,ru,lt',
 				'geoname_id' => '458258',
 				'neighbours' => 'LT,EE,BY,RU',
-			),
-			'LY' => array(
+			],
+			'LY' => [
 				'name' => elgg_echo('country:LY'),
 				'iso' => 'LY',
 				'iso3' => 'LBY',
@@ -2805,8 +2822,8 @@ class Countries {
 				'languages' => 'ar-LY,it,en',
 				'geoname_id' => '2215636',
 				'neighbours' => 'TD,NE,DZ,SD,TN,EG',
-			),
-			'MA' => array(
+			],
+			'MA' => [
 				'name' => elgg_echo('country:MA'),
 				'iso' => 'MA',
 				'iso3' => 'MAR',
@@ -2825,8 +2842,8 @@ class Countries {
 				'languages' => 'ar-MA,fr',
 				'geoname_id' => '2542007',
 				'neighbours' => 'DZ,EH,ES',
-			),
-			'MC' => array(
+			],
+			'MC' => [
 				'name' => elgg_echo('country:MC'),
 				'iso' => 'MC',
 				'iso3' => 'MCO',
@@ -2845,8 +2862,8 @@ class Countries {
 				'languages' => 'fr-MC,en,it',
 				'geoname_id' => '2993457',
 				'neighbours' => 'FR',
-			),
-			'MD' => array(
+			],
+			'MD' => [
 				'name' => elgg_echo('country:MD'),
 				'iso' => 'MD',
 				'iso3' => 'MDA',
@@ -2865,8 +2882,8 @@ class Countries {
 				'languages' => 'mo,ro,ru,gag,tr',
 				'geoname_id' => '617790',
 				'neighbours' => 'RO,UA',
-			),
-			'ME' => array(
+			],
+			'ME' => [
 				'name' => elgg_echo('country:ME'),
 				'iso' => 'ME',
 				'iso3' => 'MNE',
@@ -2885,8 +2902,8 @@ class Countries {
 				'languages' => 'sr,hu,bs,sq,hr,rom',
 				'geoname_id' => '3194884',
 				'neighbours' => 'AL,HR,BA,RS',
-			),
-			'MF' => array(
+			],
+			'MF' => [
 				'name' => elgg_echo('country:MF'),
 				'iso' => 'MF',
 				'iso3' => 'MAF',
@@ -2905,8 +2922,8 @@ class Countries {
 				'languages' => 'fr',
 				'geoname_id' => '3578421',
 				'neighbours' => '',
-			),
-			'MG' => array(
+			],
+			'MG' => [
 				'name' => elgg_echo('country:MG'),
 				'iso' => 'MG',
 				'iso3' => 'MDG',
@@ -2925,8 +2942,8 @@ class Countries {
 				'languages' => 'fr-MG,mg',
 				'geoname_id' => '1062947',
 				'neighbours' => '',
-			),
-			'MH' => array(
+			],
+			'MH' => [
 				'name' => elgg_echo('country:MH'),
 				'iso' => 'MH',
 				'iso3' => 'MHL',
@@ -2945,8 +2962,8 @@ class Countries {
 				'languages' => 'mh,en-MH',
 				'geoname_id' => '2080185',
 				'neighbours' => '',
-			),
-			'MK' => array(
+			],
+			'MK' => [
 				'name' => elgg_echo('country:MK'),
 				'iso' => 'MK',
 				'iso3' => 'MKD',
@@ -2965,8 +2982,8 @@ class Countries {
 				'languages' => 'mk,sq,tr,rmm,sr',
 				'geoname_id' => '718075',
 				'neighbours' => 'AL,GR,CS,BG,RS',
-			),
-			'ML' => array(
+			],
+			'ML' => [
 				'name' => elgg_echo('country:ML'),
 				'iso' => 'ML',
 				'iso3' => 'MLI',
@@ -2985,8 +3002,8 @@ class Countries {
 				'languages' => 'fr-ML,bm',
 				'geoname_id' => '2453866',
 				'neighbours' => 'SN,NE,DZ,CI,GN,MR,BF',
-			),
-			'MM' => array(
+			],
+			'MM' => [
 				'name' => elgg_echo('country:MM'),
 				'iso' => 'MM',
 				'iso3' => 'MMR',
@@ -3005,8 +3022,8 @@ class Countries {
 				'languages' => 'my',
 				'geoname_id' => '1327865',
 				'neighbours' => 'CN,LA,TH,BD,IN',
-			),
-			'MN' => array(
+			],
+			'MN' => [
 				'name' => elgg_echo('country:MN'),
 				'iso' => 'MN',
 				'iso3' => 'MNG',
@@ -3025,8 +3042,8 @@ class Countries {
 				'languages' => 'mn,ru',
 				'geoname_id' => '2029969',
 				'neighbours' => 'CN,RU',
-			),
-			'MO' => array(
+			],
+			'MO' => [
 				'name' => elgg_echo('country:MO'),
 				'iso' => 'MO',
 				'iso3' => 'MAC',
@@ -3045,8 +3062,8 @@ class Countries {
 				'languages' => 'zh,zh-MO',
 				'geoname_id' => '1821275',
 				'neighbours' => '',
-			),
-			'MP' => array(
+			],
+			'MP' => [
 				'name' => elgg_echo('country:MP'),
 				'iso' => 'MP',
 				'iso3' => 'MNP',
@@ -3065,8 +3082,8 @@ class Countries {
 				'languages' => 'fil,tl,zh,ch-MP,en-MP',
 				'geoname_id' => '4041467',
 				'neighbours' => '',
-			),
-			'MQ' => array(
+			],
+			'MQ' => [
 				'name' => elgg_echo('country:MQ'),
 				'iso' => 'MQ',
 				'iso3' => 'MTQ',
@@ -3085,8 +3102,8 @@ class Countries {
 				'languages' => 'fr-MQ',
 				'geoname_id' => '3570311',
 				'neighbours' => '',
-			),
-			'MR' => array(
+			],
+			'MR' => [
 				'name' => elgg_echo('country:MR'),
 				'iso' => 'MR',
 				'iso3' => 'MRT',
@@ -3105,8 +3122,8 @@ class Countries {
 				'languages' => 'ar-MR,fuc,snk,fr,mey,wo',
 				'geoname_id' => '2378080',
 				'neighbours' => 'SN,DZ,EH,ML',
-			),
-			'MS' => array(
+			],
+			'MS' => [
 				'name' => elgg_echo('country:MS'),
 				'iso' => 'MS',
 				'iso3' => 'MSR',
@@ -3125,8 +3142,8 @@ class Countries {
 				'languages' => 'en-MS',
 				'geoname_id' => '3578097',
 				'neighbours' => '',
-			),
-			'MT' => array(
+			],
+			'MT' => [
 				'name' => elgg_echo('country:MT'),
 				'iso' => 'MT',
 				'iso3' => 'MLT',
@@ -3145,8 +3162,8 @@ class Countries {
 				'languages' => 'mt,en-MT',
 				'geoname_id' => '2562770',
 				'neighbours' => '',
-			),
-			'MU' => array(
+			],
+			'MU' => [
 				'name' => elgg_echo('country:MU'),
 				'iso' => 'MU',
 				'iso3' => 'MUS',
@@ -3165,8 +3182,8 @@ class Countries {
 				'languages' => 'en-MU,bho,fr',
 				'geoname_id' => '934292',
 				'neighbours' => '',
-			),
-			'MV' => array(
+			],
+			'MV' => [
 				'name' => elgg_echo('country:MV'),
 				'iso' => 'MV',
 				'iso3' => 'MDV',
@@ -3185,8 +3202,8 @@ class Countries {
 				'languages' => 'dv,en',
 				'geoname_id' => '1282028',
 				'neighbours' => '',
-			),
-			'MW' => array(
+			],
+			'MW' => [
 				'name' => elgg_echo('country:MW'),
 				'iso' => 'MW',
 				'iso3' => 'MWI',
@@ -3205,8 +3222,8 @@ class Countries {
 				'languages' => 'ny,yao,tum,swk',
 				'geoname_id' => '927384',
 				'neighbours' => 'TZ,MZ,ZM',
-			),
-			'MX' => array(
+			],
+			'MX' => [
 				'name' => elgg_echo('country:MX'),
 				'iso' => 'MX',
 				'iso3' => 'MEX',
@@ -3225,8 +3242,8 @@ class Countries {
 				'languages' => 'es-MX',
 				'geoname_id' => '3996063',
 				'neighbours' => 'GT,US,BZ',
-			),
-			'MY' => array(
+			],
+			'MY' => [
 				'name' => elgg_echo('country:MY'),
 				'iso' => 'MY',
 				'iso3' => 'MYS',
@@ -3245,8 +3262,8 @@ class Countries {
 				'languages' => 'ms-MY,en,zh,ta,te,ml,pa,th',
 				'geoname_id' => '1733045',
 				'neighbours' => 'BN,TH,ID',
-			),
-			'MZ' => array(
+			],
+			'MZ' => [
 				'name' => elgg_echo('country:MZ'),
 				'iso' => 'MZ',
 				'iso3' => 'MOZ',
@@ -3265,8 +3282,8 @@ class Countries {
 				'languages' => 'pt-MZ,vmw',
 				'geoname_id' => '1036973',
 				'neighbours' => 'ZW,TZ,SZ,ZA,ZM,MW',
-			),
-			'NA' => array(
+			],
+			'NA' => [
 				'name' => elgg_echo('country:NA'),
 				'iso' => 'NA',
 				'iso3' => 'NAM',
@@ -3285,8 +3302,8 @@ class Countries {
 				'languages' => 'en-NA,af,de,hz,naq',
 				'geoname_id' => '3355338',
 				'neighbours' => 'ZA,BW,ZM,AO',
-			),
-			'NC' => array(
+			],
+			'NC' => [
 				'name' => elgg_echo('country:NC'),
 				'iso' => 'NC',
 				'iso3' => 'NCL',
@@ -3305,8 +3322,8 @@ class Countries {
 				'languages' => 'fr-NC',
 				'geoname_id' => '2139685',
 				'neighbours' => '',
-			),
-			'NE' => array(
+			],
+			'NE' => [
 				'name' => elgg_echo('country:NE'),
 				'iso' => 'NE',
 				'iso3' => 'NER',
@@ -3325,8 +3342,8 @@ class Countries {
 				'languages' => 'fr-NE,ha,kr,dje',
 				'geoname_id' => '2440476',
 				'neighbours' => 'TD,BJ,DZ,LY,BF,NG,ML',
-			),
-			'NF' => array(
+			],
+			'NF' => [
 				'name' => elgg_echo('country:NF'),
 				'iso' => 'NF',
 				'iso3' => 'NFK',
@@ -3345,8 +3362,8 @@ class Countries {
 				'languages' => 'en-NF',
 				'geoname_id' => '2155115',
 				'neighbours' => '',
-			),
-			'NG' => array(
+			],
+			'NG' => [
 				'name' => elgg_echo('country:NG'),
 				'iso' => 'NG',
 				'iso3' => 'NGA',
@@ -3365,8 +3382,8 @@ class Countries {
 				'languages' => 'en-NG,ha,yo,ig,ff',
 				'geoname_id' => '2328926',
 				'neighbours' => 'TD,NE,BJ,CM',
-			),
-			'NI' => array(
+			],
+			'NI' => [
 				'name' => elgg_echo('country:NI'),
 				'iso' => 'NI',
 				'iso3' => 'NIC',
@@ -3385,8 +3402,8 @@ class Countries {
 				'languages' => 'es-NI,en',
 				'geoname_id' => '3617476',
 				'neighbours' => 'CR,HN',
-			),
-			'NL' => array(
+			],
+			'NL' => [
 				'name' => elgg_echo('country:NL'),
 				'iso' => 'NL',
 				'iso3' => 'NLD',
@@ -3405,8 +3422,8 @@ class Countries {
 				'languages' => 'nl-NL,fy-NL',
 				'geoname_id' => '2750405',
 				'neighbours' => 'DE,BE',
-			),
-			'NO' => array(
+			],
+			'NO' => [
 				'name' => elgg_echo('country:NO'),
 				'iso' => 'NO',
 				'iso3' => 'NOR',
@@ -3425,8 +3442,8 @@ class Countries {
 				'languages' => 'no,nb,nn',
 				'geoname_id' => '3144096',
 				'neighbours' => 'FI,RU,SE',
-			),
-			'NP' => array(
+			],
+			'NP' => [
 				'name' => elgg_echo('country:NP'),
 				'iso' => 'NP',
 				'iso3' => 'NPL',
@@ -3445,8 +3462,8 @@ class Countries {
 				'languages' => 'ne,en',
 				'geoname_id' => '1282988',
 				'neighbours' => 'CN,IN',
-			),
-			'NR' => array(
+			],
+			'NR' => [
 				'name' => elgg_echo('country:NR'),
 				'iso' => 'NR',
 				'iso3' => 'NRU',
@@ -3465,8 +3482,8 @@ class Countries {
 				'languages' => 'na,en-NR',
 				'geoname_id' => '2110425',
 				'neighbours' => '',
-			),
-			'NU' => array(
+			],
+			'NU' => [
 				'name' => elgg_echo('country:NU'),
 				'iso' => 'NU',
 				'iso3' => 'NIU',
@@ -3485,8 +3502,8 @@ class Countries {
 				'languages' => 'niu,en-NU',
 				'geoname_id' => '4036232',
 				'neighbours' => '',
-			),
-			'NZ' => array(
+			],
+			'NZ' => [
 				'name' => elgg_echo('country:NZ'),
 				'iso' => 'NZ',
 				'iso3' => 'NZL',
@@ -3505,8 +3522,8 @@ class Countries {
 				'languages' => 'en-NZ,mi',
 				'geoname_id' => '2186224',
 				'neighbours' => '',
-			),
-			'OM' => array(
+			],
+			'OM' => [
 				'name' => elgg_echo('country:OM'),
 				'iso' => 'OM',
 				'iso3' => 'OMN',
@@ -3525,8 +3542,8 @@ class Countries {
 				'languages' => 'ar-OM,en,bal,ur',
 				'geoname_id' => '286963',
 				'neighbours' => 'SA,YE,AE',
-			),
-			'PA' => array(
+			],
+			'PA' => [
 				'name' => elgg_echo('country:PA'),
 				'iso' => 'PA',
 				'iso3' => 'PAN',
@@ -3545,8 +3562,8 @@ class Countries {
 				'languages' => 'es-PA,en',
 				'geoname_id' => '3703430',
 				'neighbours' => 'CR,CO',
-			),
-			'PE' => array(
+			],
+			'PE' => [
 				'name' => elgg_echo('country:PE'),
 				'iso' => 'PE',
 				'iso3' => 'PER',
@@ -3565,8 +3582,8 @@ class Countries {
 				'languages' => 'es-PE,qu,ay',
 				'geoname_id' => '3932488',
 				'neighbours' => 'EC,CL,BO,BR,CO',
-			),
-			'PF' => array(
+			],
+			'PF' => [
 				'name' => elgg_echo('country:PF'),
 				'iso' => 'PF',
 				'iso3' => 'PYF',
@@ -3585,8 +3602,8 @@ class Countries {
 				'languages' => 'fr-PF,ty',
 				'geoname_id' => '4020092',
 				'neighbours' => '',
-			),
-			'PG' => array(
+			],
+			'PG' => [
 				'name' => elgg_echo('country:PG'),
 				'iso' => 'PG',
 				'iso3' => 'PNG',
@@ -3605,8 +3622,8 @@ class Countries {
 				'languages' => 'en-PG,ho,meu,tpi',
 				'geoname_id' => '2088628',
 				'neighbours' => 'ID',
-			),
-			'PH' => array(
+			],
+			'PH' => [
 				'name' => elgg_echo('country:PH'),
 				'iso' => 'PH',
 				'iso3' => 'PHL',
@@ -3625,8 +3642,8 @@ class Countries {
 				'languages' => 'tl,en-PH,fil',
 				'geoname_id' => '1694008',
 				'neighbours' => '',
-			),
-			'PK' => array(
+			],
+			'PK' => [
 				'name' => elgg_echo('country:PK'),
 				'iso' => 'PK',
 				'iso3' => 'PAK',
@@ -3645,8 +3662,8 @@ class Countries {
 				'languages' => 'ur-PK,en-PK,pa,sd,ps,brh',
 				'geoname_id' => '1168579',
 				'neighbours' => 'CN,AF,IR,IN',
-			),
-			'PL' => array(
+			],
+			'PL' => [
 				'name' => elgg_echo('country:PL'),
 				'iso' => 'PL',
 				'iso3' => 'POL',
@@ -3665,8 +3682,8 @@ class Countries {
 				'languages' => 'pl',
 				'geoname_id' => '798544',
 				'neighbours' => 'DE,LT,SK,CZ,BY,UA,RU',
-			),
-			'PM' => array(
+			],
+			'PM' => [
 				'name' => elgg_echo('country:PM'),
 				'iso' => 'PM',
 				'iso3' => 'SPM',
@@ -3685,8 +3702,8 @@ class Countries {
 				'languages' => 'fr-PM',
 				'geoname_id' => '3424932',
 				'neighbours' => '',
-			),
-			'PN' => array(
+			],
+			'PN' => [
 				'name' => elgg_echo('country:PN'),
 				'iso' => 'PN',
 				'iso3' => 'PCN',
@@ -3705,8 +3722,8 @@ class Countries {
 				'languages' => 'en-PN',
 				'geoname_id' => '4030699',
 				'neighbours' => '',
-			),
-			'PR' => array(
+			],
+			'PR' => [
 				'name' => elgg_echo('country:PR'),
 				'iso' => 'PR',
 				'iso3' => 'PRI',
@@ -3725,8 +3742,8 @@ class Countries {
 				'languages' => 'en-PR,es-PR',
 				'geoname_id' => '4566966',
 				'neighbours' => '',
-			),
-			'PS' => array(
+			],
+			'PS' => [
 				'name' => elgg_echo('country:PS'),
 				'iso' => 'PS',
 				'iso3' => 'PSE',
@@ -3745,8 +3762,8 @@ class Countries {
 				'languages' => 'ar-PS',
 				'geoname_id' => '6254930',
 				'neighbours' => 'JO,IL',
-			),
-			'PT' => array(
+			],
+			'PT' => [
 				'name' => elgg_echo('country:PT'),
 				'iso' => 'PT',
 				'iso3' => 'PRT',
@@ -3765,8 +3782,8 @@ class Countries {
 				'languages' => 'pt-PT,mwl',
 				'geoname_id' => '2264397',
 				'neighbours' => 'ES',
-			),
-			'PW' => array(
+			],
+			'PW' => [
 				'name' => elgg_echo('country:PW'),
 				'iso' => 'PW',
 				'iso3' => 'PLW',
@@ -3785,8 +3802,8 @@ class Countries {
 				'languages' => 'pau,sov,en-PW,tox,ja,fil,zh',
 				'geoname_id' => '1559582',
 				'neighbours' => '',
-			),
-			'PY' => array(
+			],
+			'PY' => [
 				'name' => elgg_echo('country:PY'),
 				'iso' => 'PY',
 				'iso3' => 'PRY',
@@ -3805,8 +3822,8 @@ class Countries {
 				'languages' => 'es-PY,gn',
 				'geoname_id' => '3437598',
 				'neighbours' => 'BO,BR,AR',
-			),
-			'QA' => array(
+			],
+			'QA' => [
 				'name' => elgg_echo('country:QA'),
 				'iso' => 'QA',
 				'iso3' => 'QAT',
@@ -3825,8 +3842,8 @@ class Countries {
 				'languages' => 'ar-QA,es',
 				'geoname_id' => '289688',
 				'neighbours' => 'SA',
-			),
-			'RE' => array(
+			],
+			'RE' => [
 				'name' => elgg_echo('country:RE'),
 				'iso' => 'RE',
 				'iso3' => 'REU',
@@ -3845,8 +3862,8 @@ class Countries {
 				'languages' => 'fr-RE',
 				'geoname_id' => '935317',
 				'neighbours' => '',
-			),
-			'RO' => array(
+			],
+			'RO' => [
 				'name' => elgg_echo('country:RO'),
 				'iso' => 'RO',
 				'iso3' => 'ROU',
@@ -3865,8 +3882,8 @@ class Countries {
 				'languages' => 'ro,hu,rom',
 				'geoname_id' => '798549',
 				'neighbours' => 'MD,HU,UA,CS,BG,RS',
-			),
-			'RS' => array(
+			],
+			'RS' => [
 				'name' => elgg_echo('country:RS'),
 				'iso' => 'RS',
 				'iso3' => 'SRB',
@@ -3885,8 +3902,8 @@ class Countries {
 				'languages' => 'sr,hu,bs,rom',
 				'geoname_id' => '6290252',
 				'neighbours' => 'AL,HU,MK,RO,HR,BA,BG,ME',
-			),
-			'RU' => array(
+			],
+			'RU' => [
 				'name' => elgg_echo('country:RU'),
 				'iso' => 'RU',
 				'iso3' => 'RUS',
@@ -3905,8 +3922,8 @@ class Countries {
 				'languages' => 'ru-RU',
 				'geoname_id' => '2017370',
 				'neighbours' => 'GE,CN,BY,UA,KZ,LV,PL,EE,LT,FI,MN,NO,AZ,KP',
-			),
-			'RW' => array(
+			],
+			'RW' => [
 				'name' => elgg_echo('country:RW'),
 				'iso' => 'RW',
 				'iso3' => 'RWA',
@@ -3925,8 +3942,8 @@ class Countries {
 				'languages' => 'rw,en-RW,fr-RW,sw',
 				'geoname_id' => '49518',
 				'neighbours' => 'TZ,CD,BI,UG',
-			),
-			'SA' => array(
+			],
+			'SA' => [
 				'name' => elgg_echo('country:SA'),
 				'iso' => 'SA',
 				'iso3' => 'SAU',
@@ -3945,8 +3962,8 @@ class Countries {
 				'languages' => 'ar-SA',
 				'geoname_id' => '102358',
 				'neighbours' => 'QA,OM,IQ,YE,JO,AE,KW',
-			),
-			'SB' => array(
+			],
+			'SB' => [
 				'name' => elgg_echo('country:SB'),
 				'iso' => 'SB',
 				'iso3' => 'SLB',
@@ -3965,8 +3982,8 @@ class Countries {
 				'languages' => 'en-SB,tpi',
 				'geoname_id' => '2103350',
 				'neighbours' => '',
-			),
-			'SC' => array(
+			],
+			'SC' => [
 				'name' => elgg_echo('country:SC'),
 				'iso' => 'SC',
 				'iso3' => 'SYC',
@@ -3985,8 +4002,8 @@ class Countries {
 				'languages' => 'en-SC,fr-SC',
 				'geoname_id' => '241170',
 				'neighbours' => '',
-			),
-			'SD' => array(
+			],
+			'SD' => [
 				'name' => elgg_echo('country:SD'),
 				'iso' => 'SD',
 				'iso3' => 'SDN',
@@ -4005,8 +4022,8 @@ class Countries {
 				'languages' => 'ar-SD,en,fia',
 				'geoname_id' => '366755',
 				'neighbours' => 'TD,ER,ET,LY,KE,CF,CD,UG,EG',
-			),
-			'SE' => array(
+			],
+			'SE' => [
 				'name' => elgg_echo('country:SE'),
 				'iso' => 'SE',
 				'iso3' => 'SWE',
@@ -4025,8 +4042,8 @@ class Countries {
 				'languages' => 'sv-SE,se,sma,fi-SE',
 				'geoname_id' => '2661886',
 				'neighbours' => 'NO,FI',
-			),
-			'SG' => array(
+			],
+			'SG' => [
 				'name' => elgg_echo('country:SG'),
 				'iso' => 'SG',
 				'iso3' => 'SGP',
@@ -4045,8 +4062,8 @@ class Countries {
 				'languages' => 'cmn,en-SG,ms-SG,ta-SG,zh-SG',
 				'geoname_id' => '1880251',
 				'neighbours' => '',
-			),
-			'SH' => array(
+			],
+			'SH' => [
 				'name' => elgg_echo('country:SH'),
 				'iso' => 'SH',
 				'iso3' => 'SHN',
@@ -4065,8 +4082,8 @@ class Countries {
 				'languages' => 'en-SH',
 				'geoname_id' => '3370751',
 				'neighbours' => '',
-			),
-			'SI' => array(
+			],
+			'SI' => [
 				'name' => elgg_echo('country:SI'),
 				'iso' => 'SI',
 				'iso3' => 'SVN',
@@ -4085,8 +4102,8 @@ class Countries {
 				'languages' => 'sl,sh',
 				'geoname_id' => '3190538',
 				'neighbours' => 'HU,IT,HR,AT',
-			),
-			'SJ' => array(
+			],
+			'SJ' => [
 				'name' => elgg_echo('country:SJ'),
 				'iso' => 'SJ',
 				'iso3' => 'SJM',
@@ -4105,8 +4122,8 @@ class Countries {
 				'languages' => 'no,ru',
 				'geoname_id' => '607072',
 				'neighbours' => '',
-			),
-			'SK' => array(
+			],
+			'SK' => [
 				'name' => elgg_echo('country:SK'),
 				'iso' => 'SK',
 				'iso3' => 'SVK',
@@ -4125,8 +4142,8 @@ class Countries {
 				'languages' => 'sk,hu',
 				'geoname_id' => '3057568',
 				'neighbours' => 'PL,HU,CZ,UA,AT',
-			),
-			'SL' => array(
+			],
+			'SL' => [
 				'name' => elgg_echo('country:SL'),
 				'iso' => 'SL',
 				'iso3' => 'SLE',
@@ -4145,8 +4162,8 @@ class Countries {
 				'languages' => 'en-SL,men,tem',
 				'geoname_id' => '2403846',
 				'neighbours' => 'LR,GN',
-			),
-			'SM' => array(
+			],
+			'SM' => [
 				'name' => elgg_echo('country:SM'),
 				'iso' => 'SM',
 				'iso3' => 'SMR',
@@ -4165,8 +4182,8 @@ class Countries {
 				'languages' => 'it-SM',
 				'geoname_id' => '3168068',
 				'neighbours' => 'IT',
-			),
-			'SN' => array(
+			],
+			'SN' => [
 				'name' => elgg_echo('country:SN'),
 				'iso' => 'SN',
 				'iso3' => 'SEN',
@@ -4185,8 +4202,8 @@ class Countries {
 				'languages' => 'fr-SN,wo,fuc,mnk',
 				'geoname_id' => '2245662',
 				'neighbours' => 'GN,MR,GW,GM,ML',
-			),
-			'SO' => array(
+			],
+			'SO' => [
 				'name' => elgg_echo('country:SO'),
 				'iso' => 'SO',
 				'iso3' => 'SOM',
@@ -4205,8 +4222,8 @@ class Countries {
 				'languages' => 'so-SO,ar-SO,it,en-SO',
 				'geoname_id' => '51537',
 				'neighbours' => 'ET,KE,DJ',
-			),
-			'SR' => array(
+			],
+			'SR' => [
 				'name' => elgg_echo('country:SR'),
 				'iso' => 'SR',
 				'iso3' => 'SUR',
@@ -4225,8 +4242,8 @@ class Countries {
 				'languages' => 'nl-SR,en,srn,hns,jv',
 				'geoname_id' => '3382998',
 				'neighbours' => 'GY,BR,GF',
-			),
-			'ST' => array(
+			],
+			'ST' => [
 				'name' => elgg_echo('country:ST'),
 				'iso' => 'ST',
 				'iso3' => 'STP',
@@ -4245,8 +4262,8 @@ class Countries {
 				'languages' => 'pt-ST',
 				'geoname_id' => '2410758',
 				'neighbours' => '',
-			),
-			'SV' => array(
+			],
+			'SV' => [
 				'name' => elgg_echo('country:SV'),
 				'iso' => 'SV',
 				'iso3' => 'SLV',
@@ -4265,8 +4282,8 @@ class Countries {
 				'languages' => 'es-SV',
 				'geoname_id' => '3585968',
 				'neighbours' => 'GT,HN',
-			),
-			'SY' => array(
+			],
+			'SY' => [
 				'name' => elgg_echo('country:SY'),
 				'iso' => 'SY',
 				'iso3' => 'SYR',
@@ -4285,8 +4302,8 @@ class Countries {
 				'languages' => 'ar-SY,ku,hy,arc,fr,en',
 				'geoname_id' => '163843',
 				'neighbours' => 'IQ,JO,IL,TR,LB',
-			),
-			'SZ' => array(
+			],
+			'SZ' => [
 				'name' => elgg_echo('country:SZ'),
 				'iso' => 'SZ',
 				'iso3' => 'SWZ',
@@ -4305,8 +4322,8 @@ class Countries {
 				'languages' => 'en-SZ,ss-SZ',
 				'geoname_id' => '934841',
 				'neighbours' => 'ZA,MZ',
-			),
-			'TC' => array(
+			],
+			'TC' => [
 				'name' => elgg_echo('country:TC'),
 				'iso' => 'TC',
 				'iso3' => 'TCA',
@@ -4325,8 +4342,8 @@ class Countries {
 				'languages' => 'en-TC',
 				'geoname_id' => '3576916',
 				'neighbours' => '',
-			),
-			'TD' => array(
+			],
+			'TD' => [
 				'name' => elgg_echo('country:TD'),
 				'iso' => 'TD',
 				'iso3' => 'TCD',
@@ -4345,8 +4362,8 @@ class Countries {
 				'languages' => 'fr-TD,ar-TD,sre',
 				'geoname_id' => '2434508',
 				'neighbours' => 'NE,LY,CF,SD,CM,NG',
-			),
-			'TF' => array(
+			],
+			'TF' => [
 				'name' => elgg_echo('country:TF'),
 				'iso' => 'TF',
 				'iso3' => 'ATF',
@@ -4365,8 +4382,8 @@ class Countries {
 				'languages' => 'fr',
 				'geoname_id' => '1546748',
 				'neighbours' => '',
-			),
-			'TG' => array(
+			],
+			'TG' => [
 				'name' => elgg_echo('country:TG'),
 				'iso' => 'TG',
 				'iso3' => 'TGO',
@@ -4385,8 +4402,8 @@ class Countries {
 				'languages' => 'fr-TG,ee,hna,kbp,dag,ha',
 				'geoname_id' => '2363686',
 				'neighbours' => 'BJ,GH,BF',
-			),
-			'TH' => array(
+			],
+			'TH' => [
 				'name' => elgg_echo('country:TH'),
 				'iso' => 'TH',
 				'iso3' => 'THA',
@@ -4405,8 +4422,8 @@ class Countries {
 				'languages' => 'th,en',
 				'geoname_id' => '1605651',
 				'neighbours' => 'LA,MM,KH,MY',
-			),
-			'TJ' => array(
+			],
+			'TJ' => [
 				'name' => elgg_echo('country:TJ'),
 				'iso' => 'TJ',
 				'iso3' => 'TJK',
@@ -4425,8 +4442,8 @@ class Countries {
 				'languages' => 'tg,ru',
 				'geoname_id' => '1220409',
 				'neighbours' => 'CN,AF,KG,UZ',
-			),
-			'TK' => array(
+			],
+			'TK' => [
 				'name' => elgg_echo('country:TK'),
 				'iso' => 'TK',
 				'iso3' => 'TKL',
@@ -4445,8 +4462,8 @@ class Countries {
 				'languages' => 'tkl,en-TK',
 				'geoname_id' => '4031074',
 				'neighbours' => '',
-			),
-			'TL' => array(
+			],
+			'TL' => [
 				'name' => elgg_echo('country:TL'),
 				'iso' => 'TL',
 				'iso3' => 'TLS',
@@ -4465,8 +4482,8 @@ class Countries {
 				'languages' => 'tet,pt-TL,id,en',
 				'geoname_id' => '1966436',
 				'neighbours' => 'ID',
-			),
-			'TM' => array(
+			],
+			'TM' => [
 				'name' => elgg_echo('country:TM'),
 				'iso' => 'TM',
 				'iso3' => 'TKM',
@@ -4485,8 +4502,8 @@ class Countries {
 				'languages' => 'tk,ru,uz',
 				'geoname_id' => '1218197',
 				'neighbours' => 'AF,IR,UZ,KZ',
-			),
-			'TN' => array(
+			],
+			'TN' => [
 				'name' => elgg_echo('country:TN'),
 				'iso' => 'TN',
 				'iso3' => 'TUN',
@@ -4505,8 +4522,8 @@ class Countries {
 				'languages' => 'ar-TN,fr',
 				'geoname_id' => '2464461',
 				'neighbours' => 'DZ,LY',
-			),
-			'TO' => array(
+			],
+			'TO' => [
 				'name' => elgg_echo('country:TO'),
 				'iso' => 'TO',
 				'iso3' => 'TON',
@@ -4525,8 +4542,8 @@ class Countries {
 				'languages' => 'to,en-TO',
 				'geoname_id' => '4032283',
 				'neighbours' => '',
-			),
-			'TR' => array(
+			],
+			'TR' => [
 				'name' => elgg_echo('country:TR'),
 				'iso' => 'TR',
 				'iso3' => 'TUR',
@@ -4545,8 +4562,8 @@ class Countries {
 				'languages' => 'tr-TR,ku,diq,az,av',
 				'geoname_id' => '298795',
 				'neighbours' => 'SY,GE,IQ,IR,GR,AM,AZ,BG',
-			),
-			'TT' => array(
+			],
+			'TT' => [
 				'name' => elgg_echo('country:TT'),
 				'iso' => 'TT',
 				'iso3' => 'TTO',
@@ -4565,8 +4582,8 @@ class Countries {
 				'languages' => 'en-TT,hns,fr,es,zh',
 				'geoname_id' => '3573591',
 				'neighbours' => '',
-			),
-			'TV' => array(
+			],
+			'TV' => [
 				'name' => elgg_echo('country:TV'),
 				'iso' => 'TV',
 				'iso3' => 'TUV',
@@ -4585,8 +4602,8 @@ class Countries {
 				'languages' => 'tvl,en,sm,gil',
 				'geoname_id' => '2110297',
 				'neighbours' => '',
-			),
-			'TW' => array(
+			],
+			'TW' => [
 				'name' => elgg_echo('country:TW'),
 				'iso' => 'TW',
 				'iso3' => 'TWN',
@@ -4605,8 +4622,8 @@ class Countries {
 				'languages' => 'zh-TW,zh,nan,hak',
 				'geoname_id' => '1668284',
 				'neighbours' => '',
-			),
-			'TZ' => array(
+			],
+			'TZ' => [
 				'name' => elgg_echo('country:TZ'),
 				'iso' => 'TZ',
 				'iso3' => 'TZA',
@@ -4625,8 +4642,8 @@ class Countries {
 				'languages' => 'sw-TZ,en,ar',
 				'geoname_id' => '149590',
 				'neighbours' => 'MZ,KE,CD,RW,ZM,BI,UG,MW',
-			),
-			'UA' => array(
+			],
+			'UA' => [
 				'name' => elgg_echo('country:UA'),
 				'iso' => 'UA',
 				'iso3' => 'UKR',
@@ -4645,8 +4662,8 @@ class Countries {
 				'languages' => 'uk,ru-UA,rom,pl,hu',
 				'geoname_id' => '690791',
 				'neighbours' => 'PL,MD,HU,SK,BY,RO,RU',
-			),
-			'UG' => array(
+			],
+			'UG' => [
 				'name' => elgg_echo('country:UG'),
 				'iso' => 'UG',
 				'iso3' => 'UGA',
@@ -4665,8 +4682,8 @@ class Countries {
 				'languages' => 'en-UG,lg,sw,ar',
 				'geoname_id' => '226074',
 				'neighbours' => 'TZ,KE,SD,CD,RW',
-			),
-			'UM' => array(
+			],
+			'UM' => [
 				'name' => elgg_echo('country:UM'),
 				'iso' => 'UM',
 				'iso3' => 'UMI',
@@ -4685,8 +4702,8 @@ class Countries {
 				'languages' => 'en-UM',
 				'geoname_id' => '5854968',
 				'neighbours' => '',
-			),
-			'US' => array(
+			],
+			'US' => [
 				'name' => elgg_echo('country:US'),
 				'iso' => 'US',
 				'iso3' => 'USA',
@@ -4705,8 +4722,8 @@ class Countries {
 				'languages' => 'en-US,es-US,haw',
 				'geoname_id' => '6252001',
 				'neighbours' => 'CA,MX,CU',
-			),
-			'UY' => array(
+			],
+			'UY' => [
 				'name' => elgg_echo('country:UY'),
 				'iso' => 'UY',
 				'iso3' => 'URY',
@@ -4725,8 +4742,8 @@ class Countries {
 				'languages' => 'es-UY',
 				'geoname_id' => '3439705',
 				'neighbours' => 'BR,AR',
-			),
-			'UZ' => array(
+			],
+			'UZ' => [
 				'name' => elgg_echo('country:UZ'),
 				'iso' => 'UZ',
 				'iso3' => 'UZB',
@@ -4745,8 +4762,8 @@ class Countries {
 				'languages' => 'uz,ru,tg',
 				'geoname_id' => '1512440',
 				'neighbours' => 'TM,AF,KG,TJ,KZ',
-			),
-			'VA' => array(
+			],
+			'VA' => [
 				'name' => elgg_echo('country:VA'),
 				'iso' => 'VA',
 				'iso3' => 'VAT',
@@ -4765,8 +4782,8 @@ class Countries {
 				'languages' => 'la,it,fr',
 				'geoname_id' => '3164670',
 				'neighbours' => 'IT',
-			),
-			'VC' => array(
+			],
+			'VC' => [
 				'name' => elgg_echo('country:VC'),
 				'iso' => 'VC',
 				'iso3' => 'VCT',
@@ -4785,8 +4802,8 @@ class Countries {
 				'languages' => 'en-VC,fr',
 				'geoname_id' => '3577815',
 				'neighbours' => '',
-			),
-			'VE' => array(
+			],
+			'VE' => [
 				'name' => elgg_echo('country:VE'),
 				'iso' => 'VE',
 				'iso3' => 'VEN',
@@ -4805,8 +4822,8 @@ class Countries {
 				'languages' => 'es-VE',
 				'geoname_id' => '3625428',
 				'neighbours' => 'GY,BR,CO',
-			),
-			'VG' => array(
+			],
+			'VG' => [
 				'name' => elgg_echo('country:VG'),
 				'iso' => 'VG',
 				'iso3' => 'VGB',
@@ -4825,8 +4842,8 @@ class Countries {
 				'languages' => 'en-VG',
 				'geoname_id' => '3577718',
 				'neighbours' => '',
-			),
-			'VI' => array(
+			],
+			'VI' => [
 				'name' => elgg_echo('country:VI'),
 				'iso' => 'VI',
 				'iso3' => 'VIR',
@@ -4845,8 +4862,8 @@ class Countries {
 				'languages' => 'en-VI',
 				'geoname_id' => '4796775',
 				'neighbours' => '',
-			),
-			'VN' => array(
+			],
+			'VN' => [
 				'name' => elgg_echo('country:VN'),
 				'iso' => 'VN',
 				'iso3' => 'VNM',
@@ -4865,8 +4882,8 @@ class Countries {
 				'languages' => 'vi,en,fr,zh,km',
 				'geoname_id' => '1562822',
 				'neighbours' => 'CN,LA,KH',
-			),
-			'VU' => array(
+			],
+			'VU' => [
 				'name' => elgg_echo('country:VU'),
 				'iso' => 'VU',
 				'iso3' => 'VUT',
@@ -4885,8 +4902,8 @@ class Countries {
 				'languages' => 'bi,en-VU,fr-VU',
 				'geoname_id' => '2134431',
 				'neighbours' => '',
-			),
-			'WF' => array(
+			],
+			'WF' => [
 				'name' => elgg_echo('country:WF'),
 				'iso' => 'WF',
 				'iso3' => 'WLF',
@@ -4905,8 +4922,8 @@ class Countries {
 				'languages' => 'wls,fud,fr-WF',
 				'geoname_id' => '4034749',
 				'neighbours' => '',
-			),
-			'WS' => array(
+			],
+			'WS' => [
 				'name' => elgg_echo('country:WS'),
 				'iso' => 'WS',
 				'iso3' => 'WSM',
@@ -4925,8 +4942,8 @@ class Countries {
 				'languages' => 'sm,en-WS',
 				'geoname_id' => '4034894',
 				'neighbours' => '',
-			),
-			'YE' => array(
+			],
+			'YE' => [
 				'name' => elgg_echo('country:YE'),
 				'iso' => 'YE',
 				'iso3' => 'YEM',
@@ -4945,8 +4962,8 @@ class Countries {
 				'languages' => 'ar-YE',
 				'geoname_id' => '69543',
 				'neighbours' => 'SA,OM',
-			),
-			'YT' => array(
+			],
+			'YT' => [
 				'name' => elgg_echo('country:YT'),
 				'iso' => 'YT',
 				'iso3' => 'MYT',
@@ -4965,8 +4982,8 @@ class Countries {
 				'languages' => 'fr-YT',
 				'geoname_id' => '1024031',
 				'neighbours' => '',
-			),
-			'ZA' => array(
+			],
+			'ZA' => [
 				'name' => elgg_echo('country:ZA'),
 				'iso' => 'ZA',
 				'iso3' => 'ZAF',
@@ -4985,8 +5002,8 @@ class Countries {
 				'languages' => 'zu,xh,af,nso,en-ZA,tn,st,ts',
 				'geoname_id' => '953987',
 				'neighbours' => 'ZW,SZ,MZ,BW,NA,LS',
-			),
-			'ZM' => array(
+			],
+			'ZM' => [
 				'name' => elgg_echo('country:ZM'),
 				'iso' => 'ZM',
 				'iso3' => 'ZMB',
@@ -5005,8 +5022,8 @@ class Countries {
 				'languages' => 'en-ZM,bem,loz,lun,lue,ny,toi',
 				'geoname_id' => '895949',
 				'neighbours' => 'ZW,TZ,MZ,CD,NA,MW,AO',
-			),
-			'ZW' => array(
+			],
+			'ZW' => [
 				'name' => elgg_echo('country:ZW'),
 				'iso' => 'ZW',
 				'iso3' => 'ZWE',
@@ -5025,8 +5042,8 @@ class Countries {
 				'languages' => 'en-ZW,sn,nr,nd',
 				'geoname_id' => '878675',
 				'neighbours' => 'ZA,MZ,BW,ZM',
-			),
-		);
+			],
+		];
 	}
 
 }

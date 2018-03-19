@@ -2,6 +2,8 @@
 
 return [
 
+	'countries:placeholder' => 'Select a country ...',
+
 	'country:AD' => 'Andorra',
 	'country:AE' => 'United Arab Emirates',
 	'country:AF' => 'Afghanistan',
@@ -402,4 +404,11 @@ return [
 	'currency:ZAR' => 'Rand',
 	'currency:ZMW' => 'Kwacha',
 	'currency:ZWL' => 'Dollar',
+
+	'address:street_address' => 'Street Address',
+	'address:extended_address' => 'Street Address 2',
+	'address:locality' => 'City',
+	'address:region' => 'State',
+	'address:postal_code' => 'Postal Code',
+	'address:country' => 'Country',
 ];

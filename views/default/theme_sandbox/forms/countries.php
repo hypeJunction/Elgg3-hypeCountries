@@ -1,8 +1,11 @@
-<form>
-	<div>
-		<label>Country (.elgg-input-country)</label>
-		<?php
-		echo elgg_view('input/country');
+<hr />
+<form class="elgg-form">
+    <fieldset>
+        <?php
+		echo elgg_view_field([
+			'#label' => 'Country (.elgg-input-country)',
+			'#type' => 'country',
+		]);
 		?>
-	</div>
+	</fieldset>
 </form>
