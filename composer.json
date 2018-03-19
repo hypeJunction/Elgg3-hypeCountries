@@ -6,13 +6,16 @@
 	"keywords": [
 		"elgg", "plugin", "countries"
 	],
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-only",
 	"authors": [
 		{
 			"name": "Ismayil Khayredinov",
 			"email": "info@hypejunction.com"
 		}
 	],
+    "extra": {
+        "installer-name": "hypeCountries"
+    },
 	"autoload": {
 		"psr-0": {
 			"": "classes/"

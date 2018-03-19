@@ -1,7 +1,7 @@
 {
     "name": "hypeCountries",
     "version": "2.0.0",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "repository": {
         "type": "git",
         "url": "git@github.com:hypeJunctionPro/Elgg3-hypeCountries.git",
