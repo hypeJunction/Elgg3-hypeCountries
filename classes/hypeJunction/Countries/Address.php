@@ -64,12 +64,12 @@ class Address implements \Serializable {
 	public function unserialize($serialized) {
 		$data = unserialize($serialized);
 
-		$this->street_address = $data['_street_address'];
-		$this->extended_address = $data['_extended_address'];
-		$this->locality = $data['_locality'];
-		$this->region = $data['_region'];
-		$this->postal_code = $data['_postal_code'];
-		$this->country_code = $data['_country_code'];
+		$this->street_address = $data['street_address'];
+		$this->extended_address = $data['extended_address'];
+		$this->locality = $data['locality'];
+		$this->region = $data['region'];
+		$this->postal_code = $data['postal_code'];
+		$this->country_code = $data['country_code'];
 	}
 
 }
