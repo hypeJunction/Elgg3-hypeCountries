@@ -111,7 +111,6 @@ $fields = [
 		'required' => $required
 	],
 	[
-		'name' => "{$prefix}[country_code]",
 		'value' => 'US',
 		'disabled' => true,
 		'#type' => 'country',
@@ -122,6 +121,11 @@ $fields = [
             'allowClear' => true,
             'width' => '100%',
         ],
+	],
+	[
+		'#type' => 'hidden',
+		'name' => "{$prefix}[country_code]",
+		'value' => 'US',
 	],
 ];
 
